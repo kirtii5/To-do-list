@@ -1,7 +1,8 @@
 const taskInput = document.getElementById("task-input");
 const addTaskBtn = document.getElementById("add-task-btn");
 const taskList = document.getElementById("task-list");
-
+const filter = document.getElementById("filters");
+let currentFilter = "all";
 
 let tasks = [];
 
@@ -19,9 +20,16 @@ function saveTasks() {
 }
 
 function renderTasks() {
-    taskList.innerHTML = "";
+    let visibleTasks = tasks;
+    if (currentFilter == "active") {
+        visibleTasks = tasks.filter(t => !t.completed);
+    }
 
-    tasks.forEach((task) => {
+    if (currentFilter === "completed") {
+        visibleTasks = tasks.filter(t => t.completed);
+    }
+    taskList.innerHTML = "";
+    visibleTasks.forEach((task) => {
         const li = document.createElement("li");
         li.setAttribute("data-id", task.id);
 
@@ -76,6 +84,12 @@ function addTask() {
     renderTasks();
     taskInput.value = "";
 }
+
+filter.addEventListener("click", (e) => {
+    if (!e.target.dataset.filter) return;
+    currentFilter = e.target.dataset.filter;
+    renderTasks();
+})
 
 
 taskList.addEventListener("click", (e) => {
