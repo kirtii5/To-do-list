@@ -3,6 +3,8 @@ const addTaskBtn = document.getElementById("add-task-btn");
 const taskList = document.getElementById("task-list");
 const filter = document.getElementById("filters");
 const clrBtn = document.getElementById("clear-completed");
+const dueDateInput = document.getElementById("due-date-input");
+
 let currentFilter = "all";
 
 let tasks = [];
@@ -48,6 +50,17 @@ function renderTasks() {
             li.classList.add("completed");
         }
 
+        if (isOverdue(task)) {
+            li.classList.add("overdue");
+        }
+
+        if (task.dueDate) {
+            const dateSpan = document.createElement("span");
+            dateSpan.className = "due-date";
+            dateSpan.innerText = new Date(task.dueDate).toLocaleDateString();
+            li.appendChild(dateSpan);
+        }
+
         const select = document.createElement("select");
         ["low", "medium", "high"].forEach(p => {
             const option = document.createElement("option");
@@ -82,6 +95,7 @@ function renderTasks() {
 }
 
 function addTask() {
+    const dueDateVal = dueDateInput.value;
     const text = taskInput.value.trim();
     if (!text) return;
 
@@ -89,7 +103,8 @@ function addTask() {
         id: Date.now(),
         text: text,
         completed: false,
-        priority: "medium"
+        priority: "medium",
+        dueDate: dueDateVal ? new Date(dueDateVal).toISOString() : null,
     };
 
     tasks.push(newTask);
@@ -102,22 +117,44 @@ function addTask() {
 function startEdit(li, id) {
     const task = tasks.find(t => t.id === id);
 
-    const input = document.createElement("input");
-    input.value = task.text;
-
     li.innerHTML = "";
-    li.appendChild(input);
-    input.focus();
 
-    input.addEventListener("keydown", (e) => {
-        if (e.key === "Enter") {
-            finishEdit(id, input.value);
+    const textInput = document.createElement("input");
+    textInput.type = "text";
+    textInput.value = task.text;
+
+    const dateInput = document.createElement("input");
+    dateInput.type = "date";
+    dateInput.value = task.dueDate
+        ? task.dueDate.split("T")[0]
+        : "";
+
+    li.appendChild(textInput);
+    li.appendChild(dateInput);
+
+    textInput.focus();
+
+    function finish(save) {
+        if (save) {
+            const newText = textInput.value.trim();
+            if (!newText) return;
+
+            task.text = newText;
+            task.dueDate = dateInput.value
+                ? new Date(dateInput.value).toISOString()
+                : null;
+
+            saveTasks();
         }
-        if (e.key === "Escape") {
-            renderTasks();
-        }
+        renderTasks();
+    }
+
+    li.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") finish(true);
+        if (e.key === "Escape") finish(false);
     });
 }
+
 
 function finishEdit(id, newText) {
     newText = newText.trim();
@@ -133,6 +170,12 @@ function finishEdit(id, newText) {
 function updateClearButton() {
     clrBtn.disabled = !tasks.some(t => t.completed);
 }
+
+function isOverdue(task) {
+    if (!task.dueDate || task.completed) return false;
+    return new Date(task.dueDate) < new Date();
+}
+
 
 addTaskBtn.addEventListener("click", () => {
     addTask();
