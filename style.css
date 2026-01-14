@@ -7,7 +7,7 @@
 
 body {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, #f0f1f1, #764ba2);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -15,7 +15,7 @@ body {
 
 #app {
   width: 100%;
-  max-width: 420px;
+  max-width: 600px;
   background: #ffffff;
   border-radius: 16px;
   padding: 24px;
@@ -25,33 +25,35 @@ body {
 h1 {
   text-align: center;
   margin-bottom: 20px;
-  color: #333;
+  color: #764ba2;
 }
 
 #input-section {
   display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
+  gap: 8px;
+  margin-bottom: 16px;
 }
 
-#task-input {
+#task-input,
+#due-date-input {
   flex: 1;
-  padding: 12px;
-  border-radius: 10px;
+  padding: 10px;
+  border-radius: 8px;
   border: 1px solid #ddd;
-  outline: none;
   font-size: 14px;
 }
 
-#task-input:focus {
-  border-color: #667eea;
+#task-input:focus,
+#due-date-input:focus {
+  border-color: #764ba2;
+  outline: none;
 }
 
 #add-task-btn {
-  padding: 12px 16px;
-  border: none;
+  padding: 10px 14px;
   border-radius: 10px;
-  background: #667eea;
+  border: none;
+  background: linear-gradient(135deg, #f0f1f1, #764ba2);
   color: #fff;
   font-weight: 600;
   cursor: pointer;
@@ -59,35 +61,30 @@ h1 {
 }
 
 #add-task-btn:hover {
-  background: #5563d9;
+  background: #764ba2;
 }
 
 #filters {
   display: flex;
   justify-content: center;
-  gap: 10px;
-  margin-bottom: 16px;
+  gap: 8px;
+  margin-bottom: 12px;
 }
 
 #filters button {
-  padding: 8px 14px;
+  padding: 6px 12px;
   border-radius: 999px;
   border: 1px solid #ddd;
   background: #f5f6fa;
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-#filters button:hover {
-  background: #e6e8f0;
 }
 
 #filters button.active {
-  background: #667eea;
+  background: #764ba2;
   color: #fff;
-  border-color: #667eea;
+  border-color: #764ba2;
 }
 
 #clear-completed {
@@ -95,9 +92,9 @@ h1 {
   display: block;
   padding: 8px 14px;
   border-radius: 10px;
-  border: 1px solid #ff4d4f;
+  border: 1px solid #9c6162;
   background: transparent;
-  color: #ff4d4f;
+  color: #9c6162;
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
@@ -105,7 +102,7 @@ h1 {
 }
 
 #clear-completed:hover {
-  background: #ff4d4f;
+  background: #9c6162;
   color: #fff;
 }
 
@@ -118,15 +115,15 @@ h1 {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
 }
 
 #task-list li {
   position: relative;
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 12px 14px 12px 18px;
+  gap: 8px;
+  padding: 10px 12px 10px 16px;
   background: #f5f6fa;
   border-radius: 10px;
   font-size: 14px;
@@ -137,22 +134,22 @@ h1 {
   content: "";
   position: absolute;
   left: 0;
-  top: 8px;
-  bottom: 8px;
+  top: 6px;
+  bottom: 6px;
   width: 4px;
   border-radius: 4px;
 }
 
 #task-list li[data-priority="high"]::before {
-  background: #ff4d4f;
+  background: #9c6162;
 }
 
 #task-list li[data-priority="medium"]::before {
-  background: #faad14;
+  background: #c9a24d;
 }
 
 #task-list li[data-priority="low"]::before {
-  background: #52c41a;
+  background: #6aa57a;
 }
 
 #task-list select {
@@ -168,7 +165,7 @@ h1 {
 #task-list li button {
   border: none;
   background: transparent;
-  color: #ff4d4f;
+  color: #7c4d4e;
   font-weight: 600;
   cursor: pointer;
   margin-left: 6px;
@@ -185,4 +182,14 @@ h1 {
 #task-list li.completed span {
   text-decoration: line-through;
   color: #999;
+}
+
+#task-list li.overdue {
+  border: 1px solid #9c6162;
+  background: #f8eeee;
+}
+
+.due-date {
+  font-size: 12px;
+  color: #666;
 }
