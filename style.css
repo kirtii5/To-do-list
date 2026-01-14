@@ -91,3 +91,12 @@ h1 {
 #task-list li button:hover {
   text-decoration: underline;
 }
+
+#task-list li.completed span {
+  text-decoration: line-through;
+  color: #999;
+}
+
+#task-list li.completed {
+  opacity: 0.7;
+}
