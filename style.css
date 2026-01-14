@@ -155,3 +155,53 @@ h1 {
   opacity: 0.4;
   cursor: not-allowed;
 }
+
+task-list li {
+  position: relative;
+  padding-left: 12px;
+}
+
+#task-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 8px;
+  bottom: 8px;
+  width: 4px;
+  border-radius: 4px;
+}
+
+#task-list li[data-priority="high"]::before {
+  background: #ff4d4f;
+}
+
+#task-list li[data-priority="medium"]::before {
+  background: #faad14;
+}
+
+#task-list li[data-priority="low"]::before {
+  background: #52c41a;
+}
+
+#task-list select {
+  margin-left: auto;
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  font-size: 12px;
+  background: #fff;
+  cursor: pointer;
+}
+
+#task-list li.completed {
+  opacity: 0.6;
+}
+
+#task-list li.completed span {
+  text-decoration: line-through;
+}
+#task-list li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}

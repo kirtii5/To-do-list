@@ -6,6 +6,12 @@ const clrBtn = document.getElementById("clear-completed");
 let currentFilter = "all";
 
 let tasks = [];
+const priorityOrder = {
+    high: 1,
+    medium: 2,
+    low: 3
+};
+
 
 function loadTasks() {
     const savedTasks = localStorage.getItem("tasks");
@@ -30,6 +36,10 @@ function renderTasks() {
         visibleTasks = tasks.filter(t => t.completed);
     }
     taskList.innerHTML = "";
+    visibleTasks = [...visibleTasks].sort(
+        (a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]
+    );
+
     visibleTasks.forEach((task) => {
         const li = document.createElement("li");
         li.setAttribute("data-id", task.id);
@@ -37,6 +47,16 @@ function renderTasks() {
         if (task.completed) {
             li.classList.add("completed");
         }
+
+        const select = document.createElement("select");
+        ["low", "medium", "high"].forEach(p => {
+            const option = document.createElement("option");
+            option.value = p;
+            option.textContent = p;
+            if (task.priority === p) option.selected = true;
+            select.appendChild(option);
+        });
+
 
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
@@ -53,6 +73,7 @@ function renderTasks() {
 
         li.append(checkbox);
         li.appendChild(span);
+        li.append(select);
         li.appendChild(delBtn);
         li.appendChild(editBtn);
         taskList.appendChild(li);
@@ -67,7 +88,8 @@ function addTask() {
     const newTask = {
         id: Date.now(),
         text: text,
-        completed: false
+        completed: false,
+        priority: "medium"
     };
 
     tasks.push(newTask);
@@ -134,34 +156,43 @@ clrBtn.addEventListener("click", () => {
     renderTasks();
 })
 
-taskList.addEventListener("click", (e) => {
+taskList.addEventListener("click", e => {
+    const li = e.target.closest("li");
+    if (!li) return;
+
+    const id = Number(li.dataset.id);
+    const task = tasks.find(t => t.id === id);
 
     if (e.target.type === "checkbox") {
-        const li = e.target.closest("li");
-        const id = Number(li.dataset.id);
-
-        const task = tasks.find(t => t.id === id);
         task.completed = e.target.checked;
-
         saveTasks();
         renderTasks();
         return;
     }
 
-    const li = e.target.closest("li");
-    if (!li) return;
-
-    const id = Number(li.dataset.id);
-
     if (e.target.innerText === "Delete") {
-        tasks = tasks.filter(task => task.id !== id);
+        tasks = tasks.filter(t => t.id !== id);
         saveTasks();
         renderTasks();
+        return;
     }
 
     if (e.target.innerText === "Edit") {
         startEdit(li, id);
     }
+});
+
+taskList.addEventListener("change", e => {
+    if (e.target.tagName !== "SELECT") return;
+
+    const li = e.target.closest("li");
+    const id = Number(li.dataset.id);
+
+    const task = tasks.find(t => t.id === id);
+    task.priority = e.target.value;
+
+    saveTasks();
+    renderTasks();
 });
 
 loadTasks();
