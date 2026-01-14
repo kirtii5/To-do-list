@@ -7,7 +7,7 @@
 
 body {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, #f0f1f1, #764ba2);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -25,7 +25,7 @@ body {
 h1 {
   text-align: center;
   margin-bottom: 20px;
-  color: #333;
+  color: #764ba2;
 }
 
 #input-section {
@@ -51,7 +51,7 @@ h1 {
   padding: 12px 16px;
   border: none;
   border-radius: 10px;
-  background: #667eea;
+  background: linear-gradient(135deg, #f0f1f1, #764ba2);
   color: #fff;
   font-weight: 600;
   cursor: pointer;
@@ -59,7 +59,7 @@ h1 {
 }
 
 #add-task-btn:hover {
-  background: #5563d9;
+  background: #764ba2;
 }
 
 #filters {
@@ -95,9 +95,9 @@ h1 {
   display: block;
   padding: 8px 14px;
   border-radius: 10px;
-  border: 1px solid #ff4d4f;
+  border: 1px solid #9c6162;
   background: transparent;
-  color: #ff4d4f;
+  color: #9c6162;
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
@@ -105,7 +105,7 @@ h1 {
 }
 
 #clear-completed:hover {
-  background: #ff4d4f;
+  background: #9c6162;
   color: #fff;
 }
 
@@ -143,18 +143,6 @@ h1 {
   border-radius: 4px;
 }
 
-#task-list li[data-priority="high"]::before {
-  background: #ff4d4f;
-}
-
-#task-list li[data-priority="medium"]::before {
-  background: #faad14;
-}
-
-#task-list li[data-priority="low"]::before {
-  background: #52c41a;
-}
-
 #task-list select {
   margin-left: auto;
   padding: 4px 8px;
@@ -168,7 +156,7 @@ h1 {
 #task-list li button {
   border: none;
   background: transparent;
-  color: #ff4d4f;
+  color: #7c4d4e;
   font-weight: 600;
   cursor: pointer;
   margin-left: 6px;
