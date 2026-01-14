@@ -2,6 +2,7 @@ const taskInput = document.getElementById("task-input");
 const addTaskBtn = document.getElementById("add-task-btn");
 const taskList = document.getElementById("task-list");
 const filter = document.getElementById("filters");
+const clrBtn = document.getElementById("clear-completed");
 let currentFilter = "all";
 
 let tasks = [];
@@ -55,19 +56,9 @@ function renderTasks() {
         li.appendChild(delBtn);
         li.appendChild(editBtn);
         taskList.appendChild(li);
+        updateClearButton();
     });
 }
-
-addTaskBtn.addEventListener("click", () => {
-    addTask();
-});
-
-taskInput.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") {
-        addTask();
-    }
-});
-
 
 function addTask() {
     const text = taskInput.value.trim();
@@ -85,42 +76,6 @@ function addTask() {
     taskInput.value = "";
 }
 
-filter.addEventListener("click", (e) => {
-    if (!e.target.dataset.filter) return;
-    currentFilter = e.target.dataset.filter;
-    renderTasks();
-})
-
-
-taskList.addEventListener("click", (e) => {
-
-    if (e.target.type === "checkbox") {
-        const li = e.target.closest("li");
-        const id = Number(li.dataset.id);
-
-        const task = tasks.find(t => t.id === id);
-        task.completed = e.target.checked;
-
-        saveTasks();
-        renderTasks();
-        return;
-    }
-
-    const li = e.target.closest("li");
-    if (!li) return;
-
-    const id = Number(li.dataset.id);
-
-    if (e.target.innerText === "Delete") {
-        tasks = tasks.filter(task => task.id !== id);
-        saveTasks();
-        renderTasks();
-    }
-
-    if (e.target.innerText === "Edit") {
-        startEdit(li, id);
-    }
-});
 
 function startEdit(li, id) {
     const task = tasks.find(t => t.id === id);
@@ -153,6 +108,61 @@ function finishEdit(id, newText) {
     renderTasks();
 }
 
+function updateClearButton() {
+    clrBtn.disabled = !tasks.some(t => t.completed);
+}
+
+addTaskBtn.addEventListener("click", () => {
+    addTask();
+});
+
+taskInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+        addTask();
+    }
+});
+
+filter.addEventListener("click", (e) => {
+    if (!e.target.dataset.filter) return;
+    currentFilter = e.target.dataset.filter;
+    renderTasks();
+})
+
+clrBtn.addEventListener("click", () => {
+    tasks = tasks.filter(task => !task.completed);
+    saveTasks();
+    renderTasks();
+})
+
+taskList.addEventListener("click", (e) => {
+
+    if (e.target.type === "checkbox") {
+        const li = e.target.closest("li");
+        const id = Number(li.dataset.id);
+
+        const task = tasks.find(t => t.id === id);
+        task.completed = e.target.checked;
+
+        saveTasks();
+        renderTasks();
+        return;
+    }
+
+    const li = e.target.closest("li");
+    if (!li) return;
+
+    const id = Number(li.dataset.id);
+
+    if (e.target.innerText === "Delete") {
+        tasks = tasks.filter(task => task.id !== id);
+        saveTasks();
+        renderTasks();
+    }
+
+    if (e.target.innerText === "Edit") {
+        startEdit(li, id);
+    }
+});
 
 loadTasks();
 renderTasks();

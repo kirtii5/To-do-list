@@ -131,3 +131,27 @@ h1 {
   color: #fff;
   border-color: #667eea;
 }
+
+#clear-completed {
+  margin: 0 auto 16px;
+  display: block;
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: 1px solid #ff4d4f;
+  background: transparent;
+  color: #ff4d4f;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+#clear-completed:hover {
+  background: #ff4d4f;
+  color: #fff;
+}
+
+#clear-completed:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
