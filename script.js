@@ -368,7 +368,6 @@ taskList.addEventListener("change", e => {
     renderTasks();
 });
 
-
 loadTasks();
 renderTasks();
 checkReminders();
