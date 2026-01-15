@@ -28,6 +28,19 @@ h1 {
   color: #764ba2;
 }
 
+#input-section input,
+#input-section select {
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 13px;
+}
+
+#input-section select {
+  background: #fff;
+  cursor: pointer;
+}
+
 #input-section {
   display: flex;
   gap: 8px;
@@ -179,4 +192,15 @@ h1 {
 .due-date {
   font-size: 12px;
   color: #666;
+}
+
+.reminder-badge {
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 6px;
+  background: #eef2ff;
+  color: #4f46e5;
+  font-weight: 600;
+  margin-left: 6px;
+  white-space: nowrap;
 }
