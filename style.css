@@ -204,12 +204,3 @@ h1 {
   margin-left: 6px;
   white-space: nowrap;
 }
-li.upcoming {
-  border-left: 4px solid #f59e0b;
-  background: #fff7ed;
-}
-
-li.overdue {
-  border-left: 4px solid #dc2626;
-  background: #fee2e2;
-}

@@ -5,8 +5,6 @@ const filter = document.getElementById("filters");
 const clrBtn = document.getElementById("clear-completed");
 const dueDateInput = document.getElementById("due-date-input");
 const reminderSelect = document.getElementById("reminder-select");
-const dueTimeInput = document.getElementById("due-time-input");
-
 
 let currentFilter = "all";
 
@@ -141,12 +139,13 @@ function addTask() {
         text,
         completed: false,
         priority: "medium",
-        dueDate: dueDateISO,
+        dueDate: dueDateVal ? new Date(dueDateVal).toISOString() : null,
         reminderMinutes: reminderSelect.value
             ? Number(reminderSelect.value)
             : null,
         reminded: false
     };
+
 
     tasks.push(newTask);
     saveTasks();
@@ -189,7 +188,6 @@ function startEdit(li, id) {
 
     function finish(save) {
         task.reminded = false;
-        reminderTimers.delete(task.id);
 
         if (save) {
             const newText = textInput.value.trim();
@@ -263,48 +261,6 @@ function checkReminders() {
     saveTasks();
 }
 
-function getReminderTime(task) {
-    if (!task.dueDate || task.reminderMinutes == null) return null;
-    return new Date(
-        new Date(task.dueDate).getTime() -
-        task.reminderMinutes * 60 * 1000
-    );
-}
-
-function isUpcoming(task) {
-    const reminderTime = getReminderTime(task);
-    if (!reminderTime || task.completed) return false;
-    const now = new Date();
-    return now >= reminderTime && now < new Date(task.dueDate);
-}
-
-let reminderTimers = new Map();
-
-function scheduleReminder(task) {
-    if (
-        task.completed ||
-        task.reminded ||
-        !task.dueDate ||
-        task.reminderMinutes == null
-    ) return;
-
-    const reminderTime = getReminderTime(task);
-    if (!reminderTime) return;
-
-    const delay = reminderTime.getTime() - Date.now();
-    if (delay <= 0) return;
-
-    clearTimeout(reminderTimers.get(task.id));
-
-    const timerId = setTimeout(() => {
-        alert(`Reminder: "${task.text}" is due soon`);
-        task.reminded = true;
-        saveTasks();
-        renderTasks();
-    }, delay);
-
-    reminderTimers.set(task.id, timerId);
-}
 
 
 addTaskBtn.addEventListener("click", () => {
