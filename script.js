@@ -4,6 +4,7 @@ const taskList = document.getElementById("task-list");
 const filter = document.getElementById("filters");
 const clrBtn = document.getElementById("clear-completed");
 const dueDateInput = document.getElementById("due-date-input");
+const reminderSelect = document.getElementById("reminder-select");
 
 let currentFilter = "all";
 
@@ -17,12 +18,15 @@ const priorityOrder = {
 
 function loadTasks() {
     const savedTasks = localStorage.getItem("tasks");
-    if (savedTasks) {
-        tasks = JSON.parse(savedTasks);
-    } else {
-        tasks = [];
-    }
+    tasks = savedTasks ? JSON.parse(savedTasks) : [];
+
+    tasks = tasks.map(task => ({
+        ...task,
+        reminderMinutes: task.reminderMinutes ?? null,
+        reminded: task.reminded ?? false
+    }));
 }
+
 
 function saveTasks() {
     localStorage.setItem("tasks", JSON.stringify(tasks));
@@ -78,6 +82,13 @@ function renderTasks() {
         const span = document.createElement("span");
         span.innerText = task.text;
 
+        let reminderBadge = null;
+        if (task.reminderMinutes != null) {
+            reminderBadge = document.createElement("span");
+            reminderBadge.className = "reminder-badge";
+            reminderBadge.innerText = `⏰ ${task.reminderMinutes}m`;
+        }
+
         const delBtn = document.createElement("button");
         delBtn.innerText = "Delete";
 
@@ -86,6 +97,9 @@ function renderTasks() {
 
         li.append(checkbox);
         li.appendChild(span);
+        if (reminderBadge) {
+            li.appendChild(reminderBadge);
+        }
         li.append(select);
         li.appendChild(delBtn);
         li.appendChild(editBtn);
@@ -101,11 +115,16 @@ function addTask() {
 
     const newTask = {
         id: Date.now(),
-        text: text,
+        text,
         completed: false,
         priority: "medium",
         dueDate: dueDateVal ? new Date(dueDateVal).toISOString() : null,
+        reminderMinutes: reminderSelect.value
+            ? Number(reminderSelect.value)
+            : null,
+        reminded: false
     };
+
 
     tasks.push(newTask);
     saveTasks();
@@ -135,6 +154,8 @@ function startEdit(li, id) {
     textInput.focus();
 
     function finish(save) {
+        task.reminded = false;
+
         if (save) {
             const newText = textInput.value.trim();
             if (!newText) return;
@@ -175,6 +196,32 @@ function isOverdue(task) {
     if (!task.dueDate || task.completed) return false;
     return new Date(task.dueDate) < new Date();
 }
+
+function checkReminders() {
+    const now = new Date();
+
+    tasks.forEach(task => {
+        if (
+            task.completed ||
+            task.reminded ||
+            !task.dueDate ||
+            task.reminderMinutes == null
+        ) return;
+
+        const due = new Date(task.dueDate);
+        const reminderTime = new Date(
+            due.getTime() - task.reminderMinutes * 60 * 1000
+        );
+
+        if (now >= reminderTime && now <= due) {
+            alert(`Reminder: "${task.text}" is due soon`);
+            task.reminded = true;
+        }
+    });
+
+    saveTasks();
+}
+
 
 
 addTaskBtn.addEventListener("click", () => {
@@ -238,5 +285,8 @@ taskList.addEventListener("change", e => {
     renderTasks();
 });
 
+
 loadTasks();
 renderTasks();
+checkReminders();
+setInterval(checkReminders, 60 * 1000);
